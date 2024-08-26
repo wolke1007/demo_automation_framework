@@ -1,1 +1,5 @@
 .idea/*
+twitch/log
+twitch/screenshot
+twitch/allure_report
+*.pyc
