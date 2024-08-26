@@ -11,6 +11,7 @@ def get_base_browser_driver():
     options.add_argument("window-size=1920x1080")
     # Remove the "Chrome is being controlled by automated test software" message
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('mobileEmulation', {'deviceName': MobileDevices.PIXEL_7.value})
 
     # Resolve issues with Selenium unable to access https
     options.add_argument("--ignore-certificate-errors")

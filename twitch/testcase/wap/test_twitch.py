@@ -21,14 +21,14 @@ parameter_list = [
 
 class TestTwitch:
 
-    @pytest.mark.web_regression
-    @allure.testcase('WAP Regression Test')
+    @pytest.mark.wap_regression
+    @allure.testcase('Web Regression Test')
     @allure.severity(allure.severity_level.NORMAL)
     @allure.epic("Twitch Web Automation Testing")
     @allure.feature("Streamer Search and Screenshot")
     @allure.story("Search StarCraft II Streamer and Take Screenshot")
     @pytest.mark.parametrize("parameter", parameter_list)
-    def test_twitch_web_001(self, get_base_browser_driver, parameter):
+    def test_twitch_wap_001(self, get_base_browser_driver, parameter):
         driver = get_base_browser_driver
         platform = parameter['platform']
 
