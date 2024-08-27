@@ -1,31 +1,28 @@
 import allure
 from selenium.webdriver.common.by import By
-from selenium import webdriver
-
 from common.base_page import BasePage
+from common.browser import BaseBrowser
 from common.decorator import capture_screenshot_after_step
-
-
-class HomePageElement:
-
-    elements = {
-        "web": {
-            "search_icon": (By.XPATH, '//a[@href="/search"]')
-        },
-        "android": {
-
-        },
-        "ios": {
-
-        }
-    }
+from common.platform import Platform
 
 
 class HomePage(BasePage):
 
-    def __init__(self, driver: webdriver, platform: str):
-        super().__init__(driver)
-        self.__dict__.update(HomePageElement.elements.get(platform))
+    all_elements = {
+        Platform.WEB: {
+            "search_icon": (By.XPATH, '//a[@href="/search"]')
+        },
+        Platform.ANDROID: {
+
+        },
+        Platform.IOS: {
+
+        }
+    }
+
+    def __init__(self, browser: BaseBrowser):
+        super().__init__(browser.get_driver())
+        self.elements = self.all_elements[browser.platform]
 
     @capture_screenshot_after_step
     @allure.step("Go to Twitch")
@@ -36,4 +33,4 @@ class HomePage(BasePage):
     @allure.step("Click in the search icon")
     def click_search_icon(self):
         """this will go to search page"""
-        self.click_on_element(self.search_icon)
+        self.click_on_element(self.elements["search_icon"])

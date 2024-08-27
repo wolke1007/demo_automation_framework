@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver import ChromeOptions
+from common.platform import Platform
 
 
 class MobileDevices(Enum):
@@ -14,7 +15,10 @@ class MobileDevices(Enum):
 
 
 class BaseBrowser:
-    def __init__(self, options: ChromeOptions = None):
+    def __init__(self, options: ChromeOptions = None, platform: Platform = None):
+        if not Platform:
+            raise ValueError("Platform should be determined.")
+        self.platform = platform
         self.driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
         self.driver.delete_all_cookies()
 

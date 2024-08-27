@@ -1,45 +1,41 @@
 import allure
 from selenium.webdriver.common.by import By
 from common.base_page import BasePage
+from common.browser import BaseBrowser
 from common.decorator import capture_screenshot_after_step
-
-
-class SearchPageElement:
-    elements = {
-        "web": {
-            "search_bar": (By.XPATH, '//input[@type="search"]'),
-            "search_result_category": (By.XPATH, "//a[contains(@href, '/directory/category') and contains(@href, '{}')]")
-        },
-        "android": {
-
-        },
-        "ios": {
-
-        }
-    }
+from common.platform import Platform
 
 
 class SearchPage(BasePage):
 
-    def __init__(self, driver, platform):
-        super().__init__(driver)
-        self.__dict__.update(SearchPageElement.elements.get(platform))
+    all_elements = {
+        Platform.WEB: {
+            "search_bar": (By.XPATH, '//input[@type="search"]'),
+            "search_result_category": (By.XPATH, "//a[contains(@href, '/directory/category') and contains(@href, '{}')]")
+        },
+        Platform.ANDROID: {
+
+        },
+        Platform.IOS: {
+
+        }
+    }
+
+    def __init__(self, browser: BaseBrowser):
+        super().__init__(browser.get_driver())
+        self.elements = self.all_elements[browser.platform]
 
     @capture_screenshot_after_step
     @allure.step("Input {text} in search bar")
     def input_value_in_search_bar(self, text: str):
-        self.input_values(self.search_bar, text)
+        self.input_values(self.elements["search_bar"], text)
 
     @capture_screenshot_after_step
     @allure.step("Click search {text} result with type of category")
     def click_search_result_with_category(self, text: str):
         search_result_category = (
-            self.search_result_category[0],
-            self.search_result_category[1].format(text.replace(' ', '-').lower())
+            self.elements["search_result_category"][0],
+            self.elements["search_result_category"][1].format(text.replace(' ', '-').lower())
         )
         self.click_on_element(search_result_category)
-
-
-if __name__ == "__main__":
-    element = SearchPageElement.elements['web']
 

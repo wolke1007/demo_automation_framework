@@ -30,25 +30,24 @@ class TestTwitch:
     @pytest.mark.parametrize("parameter", parameter_list)
     def test_twitch_web_001(self, get_base_browser_driver, parameter):
         driver = get_base_browser_driver
-        platform = parameter['platform']
 
         with allure.step("Twitch Home Page"):
-            home_page = HomePage(driver, platform)
+            home_page = HomePage(driver)
             home_page.go_to_twitch()
             home_page.click_search_icon()
 
         with allure.step("Search Page"):
-            search_page = SearchPage(driver, platform)
+            search_page = SearchPage(driver)
             search_page.input_value_in_search_bar(parameter['search_subject'])
             search_page.click_search_result_with_category(parameter['search_subject'])
 
         with allure.step("Category Page"):
-            category_page = CategoryPage(driver, platform)
+            category_page = CategoryPage(driver)
             category_page.scroll_up(parameter['scroll_up_times'])
             category_page.click_index_streamer(parameter['streamer_index'])
 
         with allure.step("Streamer Home Page"):
-            stream_home_page = StreamerHomePage(driver, platform)
+            stream_home_page = StreamerHomePage(driver)
             stream_home_page.wait_for_streamer_page_loaded()
 
         with allure.step("Save Screenshot"):

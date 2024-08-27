@@ -3,10 +3,11 @@ import pytest
 from common.browser import BaseBrowser, MobileDevices
 from selenium.webdriver import ChromeOptions
 from config import WEB_IMPLICITLY_WAIT_TIME
+from common.platform import Platform
 
 
 @pytest.fixture()
-def get_base_browser_driver():
+def get_base_browser():
     options = ChromeOptions()
     options.add_argument("window-size=1920x1080")
     # Remove the "Chrome is being controlled by automated test software" message
@@ -26,14 +27,14 @@ def get_base_browser_driver():
     options.add_argument("--no-sandbox")  # Disable sandbox
     options.add_argument("--disable-dev-shm-usage")
 
-    base_browser_driver = BaseBrowser(options).get_driver()
-    base_browser_driver.implicitly_wait(WEB_IMPLICITLY_WAIT_TIME)
+    base_browser = BaseBrowser(options=options, platform=Platform.WEB)
+    base_browser.get_driver().implicitly_wait(WEB_IMPLICITLY_WAIT_TIME)
 
-    yield base_browser_driver
+    yield base_browser
     # The fixture first instantiates the browser driver, then returns it to the test case
     # (as a parameter). After performing the operations, it returns to the driver, and then proceeds to the next
     # step, closing the browser.
-    base_browser_driver.quit()
+    base_browser.get_driver().quit()
 
 
 @pytest.hookimpl(tryfirst=True)
