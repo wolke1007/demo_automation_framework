@@ -35,6 +35,45 @@ allure serve ./allure_report
 3. Operations occurring on a Page are written in that Page, with `allure.step` used before each function to document the test steps.
 4. Add new TestCases in `{product_name}/testcase/{platform}`, for example, `twitch/testcase/wap`.
 
+## Project Structure
+```
+.
+├── README.md
+├── common
+│   ├── __init__.py    <-- Shared components
+│   ├── base_page.py
+│   ├── browser.py
+│   ├── decorator.py
+│   └── platform.py
+├── config    <-- Global variable settings
+│   └── __init__.py
+├── doc    <-- Files used for README.md
+│   └── demo.gif
+├── requirements.txt
+└── twitch    <-- Project directory; if you want to add tests for a different project, create a new folder at this level
+    ├── __init__.py
+    ├── allure_report
+    ├── log
+    ├── page    <-- Add new Page Objects here
+    │   ├── __init__.py
+    │   ├── category_page.py
+    │   ├── home_page.py
+    │   ├── search_page.py
+    │   └── streamer_home_page.py
+    ├── pytest.ini
+    ├── screenshot
+    └── testcase    <-- Store test cases according to different platforms
+        ├── __init__.py
+        ├── wap    <-- Test cases for WAP; if you want to add Android tests, create a new folder at this level
+        │   ├── __init__.py
+        │   ├── conftest.py    <-- Initialize different browser instances through different conftest settings
+        │   └── test_twitch.py
+        └── web
+            ├── __init__.py
+            ├── conftest.py
+            └── test_twitch.py
+```
+
 ---
 
 # 自動化測試框架示範
@@ -73,3 +112,42 @@ allure serve ./allure_report
 2. 在每個 Page 中，`elements` 代表該頁面中可用來操作或定位的 DOM 元素，以字典形式記錄，並分為 web/android/ios 三類，方便在需要支援跨平台時重用 PageObject，而無需重寫。
 3. 該 Page 上的操作將寫在該 Page 中，並在函數前使用 `allure.step` 記錄測試步驟。
 4. 在 `{product_name}/testcase/{platform}` 中新增測試用例，例如 `twitch/testcase/wap`。
+
+## 專案架構
+```
+.
+├── README.md
+├── common    <-- 共用元件
+│   ├── __init__.py
+│   ├── base_page.py
+│   ├── browser.py
+│   ├── decorator.py
+│   └── platform.py
+├── config    <-- 全局變數設定
+│   └── __init__.py
+├── doc    <-- README.md 使用的檔案
+│   └── demo.gif
+├── requirements.txt
+└── twitch    <-- 專案目錄；若要新增不同專案的測試，可在此層新增資料夾
+    ├── __init__.py
+    ├── allure_report
+    ├── log
+    ├── page    <-- 在此新增新的 Page Object
+    │   ├── __init__.py
+    │   ├── category_page.py
+    │   ├── home_page.py
+    │   ├── search_page.py
+    │   └── streamer_home_page.py
+    ├── pytest.ini
+    ├── screenshot
+    └── testcase    <-- 按照不同平台存放測試用例
+        ├── __init__.py
+        ├── wap    <-- WAP 的測試用例；若要新增 Android 測試，則在同層新增資料夾
+        │   ├── __init__.py
+        │   ├── conftest.py    <-- 通過不同的 conftest 設定初始化不同的瀏覽器實例
+        │   └── test_twitch.py
+        └── web
+            ├── __init__.py
+            ├── conftest.py
+            └── test_twitch.py
+```
