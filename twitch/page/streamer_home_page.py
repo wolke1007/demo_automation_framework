@@ -6,6 +6,7 @@ from common.base_page import BasePage
 from common.browser import BaseBrowser
 from common.decorator import capture_screenshot_after_step
 from common.platform import Platform
+from common.wait_type import WaitType
 
 
 class StreamerHomePage(BasePage):
@@ -29,6 +30,6 @@ class StreamerHomePage(BasePage):
     @capture_screenshot_after_step
     @allure.step("Wait for streamer page loaded")
     def wait_for_streamer_page_loaded(self):
-        self.wait_element_by("visibility", self.elements["streamer_avatar"])
+        self.wait_element_by(WaitType.VISIBILITY, self.elements["streamer_avatar"])
         self.is_page_all_pic_loaded()
         self.wait_for_dom_stability()

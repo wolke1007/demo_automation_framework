@@ -6,6 +6,7 @@ import time
 from common.browser import BaseBrowser
 from common.decorator import capture_screenshot_after_step
 from common.platform import Platform
+from common.wait_type import WaitType
 
 
 class CategoryPage(BasePage):
@@ -30,7 +31,7 @@ class CategoryPage(BasePage):
     @capture_screenshot_after_step
     @allure.step("Scroll up page for {times} times")
     def scroll_up(self, times: int = 1):
-        self.wait_element_by("visibility", self.elements["category_title"])
+        self.wait_element_by(WaitType.VISIBILITY, self.elements["category_title"])
         # 取得視窗的尺寸
         window_rect = self.driver.get_window_rect()
         window_height = window_rect['height']

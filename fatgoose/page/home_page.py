@@ -4,6 +4,7 @@ from common.base_page import BasePage
 from common.browser import BaseBrowser
 from common.decorator import capture_screenshot_after_step
 from common.platform import Platform
+from common.wait_type import WaitType
 
 
 class HomePage(BasePage):
@@ -24,4 +25,4 @@ class HomePage(BasePage):
     @capture_screenshot_after_step
     @allure.step("Check into FatGoose game")
     def go_to_fat_goose(self):
-        self.wait_element_by("visibility", self.elements['content'])
+        self.wait_element_by(WaitType.VISIBILITY, self.elements['content'])

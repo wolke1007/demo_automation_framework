@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 from config import WEB_POLL_FREQUENCY
+from common.wait_type import WaitType
 import hashlib
 import time
 import logging
@@ -17,19 +18,19 @@ class BasePage:
         self.logger = logging.getLogger(__name__)
 
     def wait_element_by(self, wait_type, element, timeout: float = 10):
-        if wait_type == "visibility":
+        if wait_type is WaitType.VISIBILITY:
             return WebDriverWait(self.driver, timeout, poll_frequency=WEB_POLL_FREQUENCY).until(
                 EC.visibility_of_element_located(element)
             )
-        elif wait_type == "clickable":
+        elif wait_type is WaitType.CLICKABLE:
             return WebDriverWait(self.driver, timeout, poll_frequency=WEB_POLL_FREQUENCY).until(
                 EC.element_to_be_clickable(element)
             )
-        elif wait_type == "invisibility":
+        elif wait_type is WaitType.INVISIBILITY:
             return WebDriverWait(self.driver, timeout, poll_frequency=WEB_POLL_FREQUENCY).until(
                 EC.invisibility_of_element_located(element)
             )
-        elif wait_type == "presence":
+        elif wait_type is WaitType.PRESENCE:
             return WebDriverWait(self.driver, timeout, poll_frequency=WEB_POLL_FREQUENCY).until(
                 EC.presence_of_element_located(element)
             )
@@ -37,19 +38,19 @@ class BasePage:
             raise ValueError("wait_type not support!")
 
     def click_on_clickable_element(self, element):
-        self.wait_element_by("clickable", element)
+        self.wait_element_by(WaitType.CLICKABLE, element)
         action = ActionChains(self.driver)
         action.click(on_element=self.driver.find_element(*element))
         action.perform()
 
     def click_on_element(self, element):
-        self.wait_element_by("visibility", element)
+        self.wait_element_by(WaitType.VISIBILITY, element)
         action = ActionChains(self.driver)
         action.click(on_element=self.driver.find_element(*element))
         action.perform()
 
     def input_values(self, element, value):
-        self.wait_element_by("visibility", element)
+        self.wait_element_by(WaitType.VISIBILITY, element)
         self.driver.find_element(*element).clear()
         self.driver.find_element(*element).send_keys(value)
 
@@ -57,7 +58,7 @@ class BasePage:
         self.driver.execute_script("window.scrollBy(arguments[0], arguments[1]);", x_offset, y_offset)
 
     def get_element_text(self, element):
-        self.wait_element_by("visibility", element)
+        self.wait_element_by(WaitType.VISIBILITY, element)
         return self.driver.find_element(*element).text
 
     def find_elements(self, element):
