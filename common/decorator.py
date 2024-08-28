@@ -15,11 +15,16 @@ def capture_screenshot_after_step(func):
         result = func(*args, **kwargs)
         driver = args[0].driver  # Assuming `self.driver` is available in the context
         page_obj = args[0]  # Assuming `self.driver` is available in the context
-        page_obj.is_page_all_pic_loaded()
-        # if allure report step screenshot timing is wrong, try to add stability_time, but that reduce test efficiency
-        page_obj.wait_for_dom_stability(stability_time=1)
-        screenshot = driver.get_screenshot_as_png()
-
+        if driver.__class__.__module__.startswith('selenium'):
+            page_obj.is_page_all_pic_loaded()
+            # if allure report step screenshot timing is wrong, try to add stability_time,
+            # but that reduce test efficiency
+            page_obj.wait_for_dom_stability(stability_time=1)
+            screenshot = driver.get_screenshot_as_png()
+        elif driver.__class__.__module__.startswith('appium'):
+            screenshot = driver.get_screenshot_as_png()
+        else:
+            raise RuntimeError("page_obj type wrong")
         # Resize the screenshot based on a ratio
         image = Image.open(BytesIO(screenshot))
         width, height = image.size

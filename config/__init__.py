@@ -9,8 +9,7 @@ WEB_BROWSER_NAME = "Chrome"  # choose browser if supported
 WEB_IMPLICITLY_WAIT_TIME = 15  # selenium implicitly_wait in second
 WEB_POLL_FREQUENCY = 0.2  # selenium poll_frequency in second
 
-# APP_IMPLICITLY_WAIT_TIME: 10    # appium implicitly_wait in second
-# APP_POLL_FREQUENCY: 1           # appium poll_frequency in second
+APP_IMPLICITLY_WAIT_TIME = 10    # appium implicitly_wait in second
 
 ## android
 # ANDROID_CAPA:

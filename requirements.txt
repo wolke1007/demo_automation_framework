@@ -4,3 +4,9 @@ pytest==8.3.2
 pytest-html==4.1.1
 allure-pytest==2.13.5
 pillow~=10.4.0
+packaging==24.1
+uiautomator2==3.2.2
+Appium-Python-Client==4.1.0
+pytesseract
+opencv-python
+numpy

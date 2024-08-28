@@ -9,11 +9,8 @@ from common.platform import Platform
 class HomePage(BasePage):
 
     all_elements = {
-        Platform.WEB: {
-            "search_icon": (By.XPATH, '//a[@href="/search"]')
-        },
         Platform.ANDROID: {
-
+            "content": (By.ID, 'android:id/content')
         },
         Platform.IOS: {
 
@@ -25,12 +22,6 @@ class HomePage(BasePage):
         self.elements = self.all_elements[browser.platform]
 
     @capture_screenshot_after_step
-    @allure.step("Go to Twitch")
-    def go_to_twitch(self):
-        self.driver.get("https://m.twitch.tv/")
-
-    @capture_screenshot_after_step
-    @allure.step("Click in the search icon")
-    def click_search_icon(self):
-        """this will go to search page"""
-        self.click_on_element(self.elements["search_icon"])
+    @allure.step("Check into FatGoose game")
+    def go_to_fat_goose(self):
+        self.wait_element_by("visibility", self.elements['content'])
