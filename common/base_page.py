@@ -1,9 +1,16 @@
+from enum import Enum
+from pathlib import Path
+from typing import Final
+
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
+
+from common.platform import Platform
 from config import WEB_POLL_FREQUENCY
 from common.wait_type import WaitType
 import hashlib
@@ -13,9 +20,66 @@ import logging
 
 class BasePage:
 
-    def __init__(self, driver: webdriver):
+    LOCATOR: Final = "locator"
+    SCREENSHOT: Final = "screenshot"
+
+    # sample
+    all_elements = {
+        Platform.WEB: {
+            "demo": {
+                LOCATOR: (By.XPATH, '//demo'),
+                SCREENSHOT: 'target_pics/home_page/web_demo.jpg'  # 截圖以 web_ 開頭，代表 web 的截圖
+            },
+            "demo2": {
+                LOCATOR: (By.XPATH, '//demo2'),
+                # SCREENSHOT 為選填，該元素也可以沒有截圖，像是這個 demo2
+                # 通常是需要使用截圖來當作判斷依據進行「點擊」或「驗證」才需要有
+            }
+        },
+        Platform.ANDROID: {
+            "demo": {
+                LOCATOR: (By.XPATH, '//demo3'),
+                SCREENSHOT: 'target_pics/home_page/android_demo.jpg'  # 截圖以 android_ 開頭，代表 android 的截圖
+            },
+        },
+        Platform.IOS: {
+            "demo": {
+                LOCATOR: (By.XPATH, '//demo4'),
+                SCREENSHOT: 'target_pics/home_page/ios_demo.jpg'  # 截圖以 ios_ 開頭，代表 ios 的截圖
+            }
+        },
+    }
+
+    def __init__(self, driver: webdriver, project_name):
         self.driver = driver
         self.logger = logging.getLogger(__name__)
+        self.project_name = project_name.lower()
+        self.__elements = {}
+
+    def get_project_name(self, file):
+        # 取得當前檔案的絕對路徑
+        current_file_path = Path(file).resolve()
+        # 取得專案根目錄
+        project_root = current_file_path.parent.parent
+        project_name = project_root.stem.lower()
+        return project_name
+
+    @property
+    def elements(self):
+        if self.__elements:  # 如果 _elements 不為空則直接返回，不重複執行
+            return self.__elements
+
+        # 动态生成包含 project_name 的元素字典并更新到 _elements
+        for element_name, element_dict in self.element_locators.items():
+            if element_dict.get("screenshot") is not None:
+                # 更新元素的 screenshot 路径
+                updated_screenshot_path = f"{self.project_name}/{element_dict['screenshot']}"
+                element_dict["screenshot"] = updated_screenshot_path
+
+            # 更新 _elements 字典
+            self.__elements[element_name] = element_dict
+
+        return self.__elements
 
     def wait_element_by(self, wait_type, element, timeout: float = 10):
         if wait_type is WaitType.VISIBILITY:

@@ -10,32 +10,33 @@ class SearchPage(BasePage):
 
     all_elements = {
         Platform.WEB: {
-            "search_bar": (By.XPATH, '//input[@type="search"]'),
-            "search_result_category": (By.XPATH, "//a[contains(@href, '/directory/category') and contains(@href, '{}')]")
+            "search_bar": {
+                BasePage.LOCATOR: (By.XPATH, '//input[@type="search"]'),
+            },
+            "search_result_category": {
+                BasePage.LOCATOR: (By.XPATH, "//a[contains(@href, '/directory/category') and contains(@href, '{}')]"),
+            }
         },
-        Platform.ANDROID: {
-
-        },
-        Platform.IOS: {
-
-        }
+        Platform.ANDROID: {},
+        Platform.IOS: {}
     }
 
     def __init__(self, browser: BaseBrowser):
-        super().__init__(browser.get_driver())
-        self.elements = self.all_elements[browser.platform]
+        project_name = self.get_project_name(__file__)
+        super().__init__(browser.get_driver(), project_name)
+        self.element_locators = self.all_elements[browser.platform]  # 依照 platform 決定元素
 
     @capture_screenshot_after_step
     @allure.step("Input {text} in search bar")
     def input_value_in_search_bar(self, text: str):
-        self.input_values(self.elements["search_bar"], text)
+        self.input_values(self.elements["search_bar"][self.LOCATOR], text)
 
     @capture_screenshot_after_step
     @allure.step("Click search {text} result with type of category")
     def click_search_result_with_category(self, text: str):
         search_result_category = (
-            self.elements["search_result_category"][0],
-            self.elements["search_result_category"][1].format(text.replace(' ', '-').lower())
+            self.elements["search_result_category"][self.LOCATOR][0],
+            self.elements["search_result_category"][self.LOCATOR][1].format(text.replace(' ', '-').lower())
         )
         self.click_on_element(search_result_category)
 
